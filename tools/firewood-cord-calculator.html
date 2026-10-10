@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firewood Cord Calculator by Bluegrass Gifts</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bluegrassgifts.com/pages/firewood-cord-calculator">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:8px;}
+</style>
+<style>
+#fwc-app{--ink:#241d14;--muted:#7a6a52;--acc:#8a5a21;--gold:#c9962e;--bg:#f7f2e8;--card:#fffdf8;--line:#e3d8c2;--dark:#241d14;
+font-family:inherit;color:var(--ink);max-width:860px;margin:0 auto;}
+#fwc-app *{box-sizing:border-box;}
+#fwc-app .tool{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(36,29,20,.09);}
+#fwc-app .tool-head{background:linear-gradient(135deg,#241d14,#3a2e1d);color:#f5edda;padding:18px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;}
+#fwc-app .tool-head .t{font-size:1.05rem;font-weight:700;}
+#fwc-app .tool-head .t span{color:var(--gold);}
+#fwc-app .tool-body{padding:20px;}
+#fwc-app .f label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;}
+#fwc-app .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end;}
+#fwc-app input[type=number],#fwc-app select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);}
+#fwc-app input:focus,#fwc-app select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#fwc-app .subpair{display:flex;gap:6px;}
+#fwc-app .sub{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden;flex:1;min-width:0;}
+#fwc-app .sub input{border:none !important;min-width:0;width:100%;text-align:right;padding-right:2px;}
+#fwc-app .sub span{padding:0 8px 0 2px;color:var(--muted);font-weight:700;font-size:.8rem;}
+#fwc-app .sub:focus-within{outline:2px solid var(--gold);}
+#fwc-app h3.sec{margin:20px 0 8px;font-size:.95rem;color:var(--acc);}
+#fwc-app .result{background:var(--dark);color:#f5edda;padding:20px 22px;display:flex;gap:34px;flex-wrap:wrap;align-items:center;}
+#fwc-app .result .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#c9b98d;display:block;}
+#fwc-app .result .num{font-size:2rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.2;}
+#fwc-app .result .why{flex:1 1 240px;font-size:.85rem;color:#d9c89a;line-height:1.5;}
+#fwc-app h2{margin:1.7em 0 .5em;}
+#fwc-app textarea.embed{width:100%;height:96px;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);}
+#fwc-app details{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px;}
+#fwc-app details summary{font-weight:700;cursor:pointer;}
+@media (max-width:640px){#fwc-app .grid{grid-template-columns:1fr;}#fwc-app .result .num{font-size:1.5rem;}}
+</style>
+</head>
+<body>
+<div id="fwc-app">
+<div class="tool">
+  <div class="tool-head">
+<div class="t">🔥 Firewood Cord <span>Calculator</span>
+</div>
+  <div style="font-size:.8rem;color:#d9c89a;">A full cord is 128 cubic feet, stacked. Everything else is a fraction.</div>
+</div>
+  <div class="tool-body">
+    <h3 class="sec" style="margin-top:0;">Measure your stack (or the seller's)</h3>
+    <div class="grid">
+      <div class="f">
+<label>Stack length</label><div class="subpair"><div class="sub">
+<input type="number" id="fwL" min="0" step="0.5" placeholder="8" inputmode="decimal"><span>ft</span>
+</div></div>
+</div>
+      <div class="f">
+<label>Stack height</label><div class="subpair"><div class="sub">
+<input type="number" id="fwH" min="0" step="0.5" placeholder="4" inputmode="decimal"><span>ft</span>
+</div></div>
+</div>
+      <div class="f">
+<label>Stack depth (piece length)</label><div class="subpair"><div class="sub">
+<input type="number" id="fwD" min="0" step="1" placeholder="16" inputmode="decimal"><span>in</span>
+</div></div>
+</div>
+    </div>
+    <h3 class="sec">Optional: check the price</h3>
+    <div class="grid">
+      <div class="f">
+<label>Price asked for this stack</label><div class="subpair"><div class="sub">
+<span style="padding:0 2px 0 9px;">$</span><input type="number" id="fwP" min="0" step="5" placeholder="0" inputmode="decimal" style="text-align:left;">
+</div></div>
+</div>
+      <div class="f"></div>
+<div class="f"></div>
+    </div>
+  </div>
+  <div class="result">
+    <div>
+<span class="lbl">Cords in this stack</span><span class="num" id="fwCords">—</span>
+</div>
+    <div>
+<span class="lbl">Effective price per full cord</span><span class="num" id="fwPPC">—</span>
+</div>
+    <div class="why" id="fwWhy">Enter the stack dimensions to see how much wood is really there.</div>
+  </div>
+</div>
+</div>
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  function money(n){return '$'+n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+  function calc(){
+    var L=Math.max(0,parseFloat($('fwL').value)||0), Hh=Math.max(0,parseFloat($('fwH').value)||0), Din=Math.max(0,parseFloat($('fwD').value)||0), P=Math.max(0,parseFloat($('fwP').value)||0);
+    if(!(L&&Hh&&Din)){$('fwCords').textContent='—';$('fwPPC').textContent='—';$('fwWhy').textContent='Enter the stack dimensions to see how much wood is really there.';return;}
+    var cords=L*Hh*(Din/12)/128;
+    $('fwCords').textContent=cords.toFixed(2);
+    var bits=[L+"ft × "+Hh+"ft × "+Din+'" = '+(L*Hh*Din/12).toFixed(1)+' cu ft — a full cord is 128.'];
+    if(cords>0){
+      var frac=cords<0.9? ' (about '+(cords>=0.3&&cords<=0.36?'a third':cords>=0.22&&cords<=0.28?'a quarter':cords>=0.45&&cords<=0.55?'half':(Math.round(cords*100)+'%'))+' of a cord)':'';
+      bits.push('That\'s '+cords.toFixed(2)+' cords'+frac+'.');
+    }
+    if(P>0&&cords>0){$('fwPPC').textContent=money(P/cords);bits.push('At $'+P+' for this stack, you\'re paying '+money(P/cords)+' per full cord — compare sellers on that number.');}
+    else {$('fwPPC').textContent='—';}
+    $('fwWhy').textContent=bits.join(' ');
+  }
+  ['fwL','fwH','fwD','fwP'].forEach(function(id){$(id).addEventListener('input',calc);});
+  calc();
+})();
+</script>
+</body>
+</html>
