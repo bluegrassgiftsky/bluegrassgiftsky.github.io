@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumber Weight Calculator by Bluegrass Gifts</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bluegrassgifts.com/pages/lumber-weight-calculator">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:8px;}
+</style>
+<style>
+#lwc-app{--ink:#241d14;--muted:#7a6a52;--acc:#8a5a21;--gold:#c9962e;--bg:#f7f2e8;--card:#fffdf8;--line:#e3d8c2;--dark:#241d14;
+font-family:inherit;color:var(--ink);max-width:860px;margin:0 auto;}
+#lwc-app *{box-sizing:border-box;}
+#lwc-app .tool{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(36,29,20,.09);}
+#lwc-app .tool-head{background:linear-gradient(135deg,#241d14,#3a2e1d);color:#f5edda;padding:18px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;}
+#lwc-app .tool-head .t{font-size:1.05rem;font-weight:700;}
+#lwc-app .tool-head .t span{color:var(--gold);}
+#lwc-app .tool-body{padding:20px;}
+#lwc-app .f label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;}
+#lwc-app .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:end;}
+#lwc-app input[type=number],#lwc-app select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);}
+#lwc-app input:focus,#lwc-app select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#lwc-app .result{background:var(--dark);color:#f5edda;padding:20px 22px;display:flex;gap:34px;flex-wrap:wrap;align-items:center;}
+#lwc-app .result .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#c9b98d;display:block;}
+#lwc-app .result .num{font-size:2rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.2;}
+#lwc-app .result .why{flex:1 1 240px;font-size:.85rem;color:#d9c89a;line-height:1.5;}
+#lwc-app h2{margin:1.7em 0 .5em;}
+#lwc-app textarea.embed{width:100%;height:96px;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);}
+#lwc-app details{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px;}
+#lwc-app details summary{font-weight:700;cursor:pointer;}
+@media (max-width:640px){#lwc-app .grid{grid-template-columns:1fr 1fr;}#lwc-app .result .num{font-size:1.5rem;}}
+</style>
+</head>
+<body>
+<div id="lwc-app">
+<div class="tool">
+  <div class="tool-head">
+<div class="t">⚖️ Lumber Weight <span>Calculator</span>
+</div>
+  <div style="font-size:.8rem;color:#d9c89a;">Species density × volume — know the load before you lift it.</div>
+</div>
+  <div class="tool-body">
+    <div class="grid">
+      <div class="f" style="grid-column:span 2;">
+<label>Species (air-dried, ≈12% moisture)</label><select id="lwS"></select>
+</div>
+      <div class="f">
+<label>Board feet</label><input type="number" id="lwBF" min="0" step="1" placeholder="100" inputmode="decimal">
+</div>
+      <div class="f">
+<label>Or green (wet) wood?</label><select id="lwG"><option value="dry" selected>Air-dried</option>
+<option value="green">Freshly cut (green)</option></select>
+</div>
+    </div>
+    <p style="font-size:.83rem;color:var(--muted);margin:10px 2px 0;">Don't know the board feet? Run your stack through the <a href="/pages/board-foot-calculator">board foot calculator</a> first, then bring the total here.</p>
+  </div>
+  <div class="result">
+    <div>
+<span class="lbl">Estimated weight</span><span class="num" id="lwOut">—</span>
+</div>
+    <div class="why" id="lwWhy">Pick a species and enter board feet.</div>
+  </div>
+</div>
+</div>
+<script>
+(function(){
+  // density lb/ft3 at ~12% MC; greenFactor approximates green/dry weight ratio
+  var SPECIES=[
+    ["Ash (white)",42,1.45],["Basswood",26,1.6],["Beech",45,1.5],["Birch (yellow)",43,1.55],
+    ["Cedar (aromatic red)",33,1.35],["Cedar (western red)",23,1.2],["Cherry",35,1.4],
+    ["Cypress",32,1.75],["Douglas fir",34,1.4],["Hemlock",28,1.75],["Hickory",51,1.45],
+    ["Maple (hard)",44,1.5],["Maple (soft)",38,1.5],["Oak (red)",44,1.6],["Oak (white)",47,1.55],
+    ["Pine (eastern white)",25,1.7],["Pine (southern yellow)",37,1.5],["Poplar (yellow)",29,1.55],
+    ["Sycamore",34,1.55],["Walnut (black)",38,1.45]
+  ];
+  function $(id){return document.getElementById(id);}
+  var sel=$('lwS');
+  SPECIES.forEach(function(s,i){var o=document.createElement('option');o.value=i;o.textContent=s[0]+' — '+s[1]+' lb/ft³';if(s[0]==='Poplar (yellow)')o.selected=true;sel.appendChild(o);});
+  function calc(){
+    var s=SPECIES[parseInt(sel.value)||0];
+    var bf=parseFloat($('lwBF').value)||0;
+    var green=$('lwG').value==='green';
+    if(!bf){$('lwOut').textContent='—';$('lwWhy').textContent='Pick a species and enter board feet.';return;}
+    var lbs=s[1]*bf/12*(green?s[2]:1);
+    $('lwOut').textContent=Math.round(lbs).toLocaleString()+' lb';
+    var bits=[bf+' bd ft of '+s[0]+' at '+s[1]+' lb/ft³'+(green?' with a green-wood factor of '+s[2]+'×':'')+' ≈ '+Math.round(lbs).toLocaleString()+' lb.'];
+    if(lbs>1000)bits.push('That\'s over half a ton — check your payload sticker before hauling in one trip.');
+    else if(lbs>500)bits.push('Substantial load — fine for most full-size pickups, heavy for a small trailer.');
+    bits.push('Averages only; individual boards vary with moisture and growth.');
+    $('lwWhy').textContent=bits.join(' ');
+  }
+  ['lwBF'].forEach(function(id){$(id).addEventListener('input',calc);});
+  sel.addEventListener('change',calc);$('lwG').addEventListener('change',calc);
+  calc();
+})();
+</script>
+</body>
+</html>
