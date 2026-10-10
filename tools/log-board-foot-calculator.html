@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log Board Foot Calculator by Bluegrass Gifts</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bluegrassgifts.com/pages/log-board-foot-calculator">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:8px;}
+</style>
+<style>
+#lgc-app{--ink:#241d14;--muted:#7a6a52;--acc:#8a5a21;--gold:#c9962e;--bg:#f7f2e8;--card:#fffdf8;--line:#e3d8c2;--dark:#241d14;
+font-family:inherit;color:var(--ink);max-width:860px;margin:0 auto;}
+#lgc-app *{box-sizing:border-box;}
+#lgc-app .tool{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(36,29,20,.09);}
+#lgc-app .tool-head{background:linear-gradient(135deg,#241d14,#3a2e1d);color:#f5edda;padding:18px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;}
+#lgc-app .tool-head .t{font-size:1.05rem;font-weight:700;}
+#lgc-app .tool-head .t span{color:var(--gold);}
+#lgc-app .tool-body{padding:20px;}
+#lgc-app .f label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;}
+#lgc-app .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:end;}
+#lgc-app input[type=number],#lgc-app select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);}
+#lgc-app input:focus,#lgc-app select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#lgc-app .result{background:var(--dark);color:#f5edda;padding:20px 22px;display:flex;gap:34px;flex-wrap:wrap;align-items:center;}
+#lgc-app .result .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#c9b98d;display:block;}
+#lgc-app .result .num{font-size:2rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.2;}
+#lgc-app .result .why{flex:1 1 240px;font-size:.85rem;color:#d9c89a;line-height:1.5;}
+#lgc-app .allrules{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px;}
+#lgc-app .allrules .r{font-size:.8rem;color:#d9c89a;}
+#lgc-app .allrules b{color:#f5edda;}
+#lgc-app h2{margin:1.7em 0 .5em;}
+#lgc-app textarea.embed{width:100%;height:96px;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);}
+#lgc-app details{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px;}
+#lgc-app details summary{font-weight:700;cursor:pointer;}
+@media (max-width:640px){#lgc-app .grid{grid-template-columns:1fr 1fr;}#lgc-app .result .num{font-size:1.5rem;}}
+</style>
+</head>
+<body>
+<div id="lgc-app">
+<div class="tool">
+  <div class="tool-head">
+<div class="t">🪓 Log Board Foot <span>Calculator</span>
+</div>
+  <div style="font-size:.8rem;color:#d9c89a;">Doyle · Scribner · International ¼" — all three log rules at once.</div>
+</div>
+  <div class="tool-body">
+    <div class="grid">
+      <div class="f">
+<label>Small-end diameter (inside bark)</label><input type="number" id="lgD" min="4" max="60" step="1" placeholder="16" inputmode="numeric">
+</div>
+      <div class="f">
+<label>Log length (feet)</label><select id="lgL"><option>6</option>
+<option>8</option>
+<option>10</option>
+<option selected>12</option>
+<option>14</option>
+<option>16</option></select>
+</div>
+      <div class="f">
+<label>Number of logs</label><input type="number" id="lgN" min="1" step="1" value="1" inputmode="numeric">
+</div>
+      <div class="f">
+<label>Show rule</label><select id="lgR"><option value="doyle" selected>Doyle (most common)</option>
+<option value="scribner">Scribner</option>
+<option value="intl">International ¼"</option></select>
+</div>
+    </div>
+  </div>
+  <div class="result">
+    <div>
+<span class="lbl" id="lgMainLbl">Doyle board feet</span><span class="num" id="lgBF">—</span>
+</div>
+    <div class="why">
+      <div class="allrules">
+        <div class="r">Doyle: <b id="lgDoyle">—</b>
+</div>
+        <div class="r">Scribner: <b id="lgScrib">—</b>
+</div>
+        <div class="r">Int'l ¼": <b id="lgIntl">—</b>
+</div>
+      </div>
+      <div id="lgWhy" style="margin-top:8px;">Enter the small-end diameter and length to scale the log.</div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  function doyle(D,L){return Math.pow(D-4,2)*L/16;}
+  var SCRIB_LEN=[6,8,10,12,14,16];
+  var SCRIB={6:[5,5,10,10,10,20],7:[5,10,10,20,20,30],8:[10,10,20,20,20,30],9:[10,20,30,30,30,40],
+  10:[20,30,30,30,40,60],11:[20,30,40,40,50,70],12:[30,40,50,60,70,80],13:[40,50,60,70,80,100],
+  14:[40,60,70,90,100,110],15:[50,70,90,110,120,140],16:[60,80,100,120,140,160],17:[70,90,120,140,160,180],
+  18:[80,110,130,160,190,210],19:[90,120,150,180,210,240],20:[110,140,170,210,240,280],21:[120,150,190,230,270,300],
+  22:[130,170,210,250,290,330],23:[140,190,230,280,330,380],24:[150,210,250,300,350,400],25:[170,230,290,340,400,460],
+  26:[190,250,310,370,440,500],27:[210,270,340,410,480,550],28:[220,290,360,440,510,580],29:[230,310,380,460,530,610],
+  30:[250,330,410,490,570,660]};
+  function scribRow(D){
+    /* linear interpolation between whole-inch table rows */
+    var lo=Math.floor(D), hi=Math.ceil(D);
+    if(lo<6) lo=hi=6;
+    if(hi>30) return null;
+    var a=SCRIB[lo], b=SCRIB[hi];
+    if(!a||!b) return null;
+    if(lo===hi) return a.slice();
+    var f=D-lo;
+    return a.map(function(v,i){return v+(b[i]-v)*f;});
+  }
+  function scribner(D,L){
+    if(D<6) return 0;
+    var row=scribRow(D);
+    if(!row){ /* above the published table: the formula tracks within ~2% out here */
+      return Math.max(0,(0.79*D*D-2*D-4)*L/16);
+    }
+    if(L<=SCRIB_LEN[0]) return row[0]*(L/SCRIB_LEN[0]);
+    if(L>=16) return row[5]*(L/16);            /* scale per foot beyond the table */
+    for(var i=0;i<SCRIB_LEN.length-1;i++){
+      if(L>=SCRIB_LEN[i]&&L<=SCRIB_LEN[i+1]){
+        var f=(L-SCRIB_LEN[i])/(SCRIB_LEN[i+1]-SCRIB_LEN[i]);
+        return row[i]+(row[i+1]-row[i])*f;
+      }
+    }
+    return row[5]*(L/16);
+  }
+  function intl(D,L){ // International 1/4" rule: 4-ft segments, +1/2" taper per segment from small end
+    var bf=0, segs=Math.floor(L/4);
+    for(var i=0;i<segs;i++){var d=D+0.5*i; bf+=0.905*(0.22*d*d-0.71*d);}
+    var rem=L-segs*4;
+    if(rem>0){var d2=D+0.5*segs; bf+=(rem/4)*0.905*(0.22*d2*d2-0.71*d2);}
+    return bf;
+  }
+  function calc(){
+    var D=parseFloat($('lgD').value)||0, L=parseFloat($('lgL').value)||12, N=Math.max(1,parseInt($('lgN').value)||1), R=$('lgR').value;
+    if(D<4){['lgBF','lgDoyle','lgScrib','lgIntl'].forEach(function(i){$(i).textContent='—';});$('lgWhy').textContent='Enter the small-end diameter and length to scale the log.';return;}
+    var d=Math.max(0,doyle(D,L))*N, s=Math.max(0,scribner(D,L))*N, i=Math.max(0,intl(D,L))*N;
+    $('lgDoyle').textContent=Math.round(d)+' bf';
+    $('lgScrib').textContent=Math.round(s)+' bf';
+    $('lgIntl').textContent=Math.round(i)+' bf';
+    var main=R==='doyle'?d:R==='scribner'?s:i;
+    var name=R==='doyle'?'Doyle':R==='scribner'?'Scribner':'International ¼"';
+    $('lgMainLbl').textContent=name+' board feet';
+    $('lgBF').textContent=Math.round(main).toLocaleString();
+    $('lgWhy').textContent=N+' log'+(N>1?'s':'')+', '+D+'" small end × '+L+' ft. Estimates only — mills deduct for sweep, rot, and defect, and always confirm which rule your buyer scales by.';
+  }
+  ['lgD','lgL','lgN','lgR'].forEach(function(id){$(id).addEventListener('input',calc);$(id).addEventListener('change',calc);});
+  calc();
+})();
+</script>
+</body>
+</html>
