@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plywood Calculator by Bluegrass Gifts</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bluegrassgifts.com/pages/plywood-sheet-calculator">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:8px;}
+</style>
+<style>
+#pwc-app{--ink:#241d14;--muted:#7a6a52;--acc:#8a5a21;--gold:#c9962e;--bg:#f7f2e8;--card:#fffdf8;--line:#e3d8c2;--dark:#241d14;
+font-family:inherit;color:var(--ink);max-width:860px;margin:0 auto;}
+#pwc-app *{box-sizing:border-box;}
+#pwc-app .tool{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(36,29,20,.09);}
+#pwc-app .tool-head{background:linear-gradient(135deg,#241d14,#3a2e1d);color:#f5edda;padding:18px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;}
+#pwc-app .tool-head .t{font-size:1.05rem;font-weight:700;}
+#pwc-app .tool-head .t span{color:var(--gold);}
+#pwc-app .tool-body{padding:20px;}
+#pwc-app .f label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;}
+#pwc-app .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:end;}
+#pwc-app input[type=number],#pwc-app select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);}
+#pwc-app input:focus,#pwc-app select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#pwc-app .result{background:var(--dark);color:#f5edda;padding:20px 22px;display:flex;gap:34px;flex-wrap:wrap;align-items:center;}
+#pwc-app .result .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#c9b98d;display:block;}
+#pwc-app .result .num{font-size:2rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.2;}
+#pwc-app .result .why{flex:1 1 240px;font-size:.85rem;color:#d9c89a;line-height:1.5;}
+#pwc-app h2{margin:1.7em 0 .5em;}
+#pwc-app textarea.embed{width:100%;height:96px;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);}
+#pwc-app details{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px;}
+#pwc-app details summary{font-weight:700;cursor:pointer;}
+@media (max-width:640px){#pwc-app .grid{grid-template-columns:1fr 1fr;}#pwc-app .result .num{font-size:1.5rem;}}
+</style>
+</head>
+<body>
+<div id="pwc-app">
+<div class="tool">
+  <div class="tool-head">
+<div class="t">📐 Plywood Sheet <span>Calculator</span>
+</div>
+  <div style="font-size:.8rem;color:#d9c89a;">Area to cover → sheets to buy, waste included.</div>
+</div>
+  <div class="tool-body">
+    <div class="grid">
+      <div class="f">
+<label>Area width (ft)</label><input type="number" id="pwW" min="0" step="0.5" placeholder="12" inputmode="decimal">
+</div>
+      <div class="f">
+<label>Area length (ft)</label><input type="number" id="pwL" min="0" step="0.5" placeholder="16" inputmode="decimal">
+</div>
+      <div class="f">
+<label>Sheet size</label><select id="pwS"><option value="32" selected>4×8 ft (32 sq ft)</option>
+<option value="16">4×4 ft (16 sq ft)</option>
+<option value="25">5×5 ft Baltic (25 sq ft)</option></select>
+</div>
+      <div class="f">
+<label>Waste allowance</label><select id="pwX"><option value="0.10" selected>10% (simple layout)</option>
+<option value="0.15">15% (typical)</option>
+<option value="0.20">20% (many cuts/angles)</option>
+<option value="0">None (exact math)</option></select>
+</div>
+    </div>
+    <div class="grid" style="margin-top:12px;">
+      <div class="f">
+<label>Or enter square feet directly</label><input type="number" id="pwA" min="0" step="1" placeholder="e.g. 240" inputmode="decimal">
+</div>
+      <div class="f">
+<label>Price per sheet (optional)</label><input type="number" id="pwP" min="0" step="1" placeholder="$" inputmode="decimal">
+</div>
+      <div class="f"></div>
+<div class="f"></div>
+    </div>
+  </div>
+  <div class="result">
+    <div>
+<span class="lbl">Sheets to buy</span><span class="num" id="pwOut">—</span>
+</div>
+    <div>
+<span class="lbl">Estimated cost</span><span class="num" id="pwCost">—</span>
+</div>
+    <div class="why" id="pwWhy">Enter the area to cover.</div>
+  </div>
+</div>
+</div>
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  function money(n){return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+  function calc(){
+    var W=parseFloat($('pwW').value)||0, L=parseFloat($('pwL').value)||0;
+    var direct=parseFloat($('pwA').value)||0;
+    var area=direct>0?direct:W*L;
+    var sheetA=parseFloat($('pwS').value), waste=parseFloat($('pwX').value), P=parseFloat($('pwP').value)||0;
+    if(!area){$('pwOut').textContent='—';$('pwCost').textContent='—';$('pwWhy').textContent='Enter the area to cover.';return;}
+    var needed=area*(1+waste)/sheetA;
+    var sheets=Math.ceil(needed);
+    $('pwOut').textContent=sheets;
+    $('pwCost').textContent=P>0?money(sheets*P):'—';
+    var bits=[area.toFixed(0)+' sq ft'+(waste>0?' + '+(waste*100)+'% waste':'')+' ÷ '+sheetA+' sq ft per sheet = '+needed.toFixed(2)+', rounded up to '+sheets+' sheet'+(sheets>1?'s':'')+'.'];
+    if(P>0)bits.push('At $'+P+'/sheet that\'s '+money(sheets*P)+'.');
+    bits.push('Grain direction and seam placement can add sheets beyond pure area math.');
+    $('pwWhy').textContent=bits.join(' ');
+  }
+  ['pwW','pwL','pwA','pwP'].forEach(function(id){$(id).addEventListener('input',calc);});
+  $('pwS').addEventListener('change',calc);$('pwX').addEventListener('change',calc);
+  calc();
+})();
+</script>
+</body>
+</html>
