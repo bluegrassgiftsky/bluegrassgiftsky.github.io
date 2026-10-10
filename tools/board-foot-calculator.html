@@ -115,7 +115,7 @@ font-family:inherit;color:var(--ink);max-width:900px;margin:0 auto;}
   <div class="tool-body">
     <div class="rows" id="bfcRows"></div>
     <button class="add" id="bfcAdd" type="button">+ Add another board</button>
-    <p class="note">Board feet = thickness × width × length (all inches) ÷ 144. Thickness pills are lumber-yard quarters: 4/4 = 1", 5/4 = 1¼", 6/4 = 1½", 8/4 = 2". Rough lumber is charged at nominal thickness — pick the quarter you're buying, not the planed size.</p>
+    <p class="note">Board feet = thickness × width × length (all inches) ÷ 144. Thickness is in lumber-yard quarters: 4/4 = 1", 5/4 = 1¼", 6/4 = 1½", 8/4 = 2". Rough lumber is charged at nominal thickness — pick the quarter you're buying, not the planed size.</p>
   </div>
   <div class="tool-foot">
     <div class="totals">
@@ -167,13 +167,13 @@ font-family:inherit;color:var(--ink);max-width:900px;margin:0 auto;}
     return d;
   }
   function addRow(){rows.appendChild(rowTemplate());calc();}
-  function rowPrice(d){return parseFloat(d.querySelector('.r-p').value)||0;}
+  function rowPrice(d){return Math.max(0,parseFloat(d.querySelector('.r-p').value)||0);}
   function rowBF(d){
     var t=parseFloat(d.dataset.q)||0;
     var wEl=d.querySelector('.r-w');
-    var w=parseFloat(wEl.value)||0;
-    var l=(parseFloat(d.querySelector('.r-lf').value)||0)*12+(parseFloat(d.querySelector('.r-li').value)||0);
-    var n=parseInt(d.querySelector('.r-n').value)||1;
+    var w=Math.max(0,parseFloat(wEl.value)||0);
+    var l=Math.max(0,parseFloat(d.querySelector('.r-lf').value)||0)*12+Math.max(0,parseFloat(d.querySelector('.r-li').value)||0);
+    var n=Math.max(1,parseInt(d.querySelector('.r-n').value)||1);
     return t*w*l/144*n;
   }
   function calc(){
