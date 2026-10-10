@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Foot Calculator by Bluegrass Gifts</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://bluegrassgifts.com/pages/board-foot-calculator">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:8px;}
+#bfc-app .credit{text-align:center;font-size:.8rem;color:#7a6a52;margin:10px 0 2px;}
+#bfc-app .credit a{color:#8a5a21;}
+</style>
+<style>
+#bfc-app{--ink:#241d14;--muted:#7a6a52;--acc:#8a5a21;--gold:#c9962e;--gold-d:#a87a1f;--bg:#f7f2e8;--card:#fffdf8;--line:#e3d8c2;--dark:#241d14;--good:#3f6d4e;
+font-family:inherit;color:var(--ink);max-width:900px;margin:0 auto;}
+#bfc-app *{box-sizing:border-box;}
+#bfc-app .tool{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(36,29,20,.09);}
+#bfc-app .tool-head{background:linear-gradient(135deg,#241d14,#3a2e1d);color:#f5edda;padding:18px 22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;}
+#bfc-app .tool-head .t{font-size:1.05rem;font-weight:700;letter-spacing:.02em;}
+#bfc-app .tool-head .t span{color:var(--gold);}
+#bfc-app .pricebox{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(201,150,46,.45);border-radius:10px;padding:7px 12px;}
+#bfc-app .pricebox label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#d9c89a;}
+#bfc-app .pricebox b{color:var(--gold);font-size:1rem;}
+#bfc-app .pricebox input{width:90px;padding:6px 8px;border:none;border-radius:6px;font-size:1rem;font-weight:600;text-align:right;background:#fffdf8;color:var(--ink);}
+#bfc-app .pricebox input:focus{outline:2px solid var(--gold);}
+#bfc-app .head-totals{display:flex;gap:26px;align-items:center;}
+#bfc-app .head-totals .hlbl{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.09em;color:#c9b98d;font-weight:700;}
+#bfc-app .head-totals .hnum{font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold);line-height:1.15;}
+#bfc-app .tool-body{padding:18px 18px 6px;}
+#bfc-app .rows{display:flex;flex-direction:column;gap:12px;}
+#bfc-app .row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px;position:relative;}
+#bfc-app .row .x{position:absolute;top:8px;right:10px;background:#f1e9d6;border:1px solid var(--line);border-radius:50%;width:26px;height:26px;color:#8a765a;font-size:1rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+#bfc-app .row .x:hover{color:#fff;background:#b23b3b;border-color:#b23b3b;transform:scale(1.08);}
+#bfc-app .row-top{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+#bfc-app .row-top .name{flex:1 1 180px;}
+#bfc-app .row input[type=text],#bfc-app .row input[type=number]{padding:9px 10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);width:100%;}
+#bfc-app .row input:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#bfc-app .quarters{display:flex;gap:6px;flex-wrap:wrap;}
+#bfc-app .q{border:1px solid var(--line);background:linear-gradient(#fff,#f6efe0);color:var(--ink);border-radius:999px;padding:8px 15px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(36,29,20,.08);}
+#bfc-app .q:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 3px 8px rgba(36,29,20,.14);}
+#bfc-app .q.on{background:linear-gradient(135deg,#a1691f,#8a5a21);border-color:#7a4d18;color:#fff;box-shadow:inset 0 1px 3px rgba(0,0,0,.25),0 2px 6px rgba(138,90,33,.35);transform:none;}
+#bfc-app .q:active{transform:translateY(0);box-shadow:inset 0 1px 3px rgba(0,0,0,.15);}
+#bfc-app .row-grid{display:grid;grid-template-columns:minmax(110px,1fr) minmax(80px,.85fr) minmax(150px,1.25fr) minmax(104px,.9fr) minmax(100px,.95fr) minmax(180px,1.4fr);gap:10px;align-items:end;}
+#bfc-app .thickwrap{display:flex;flex-direction:column;gap:6px;}
+#bfc-app .thickwrap select{padding:9px 8px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;font-weight:700;background:linear-gradient(#fff,#f6efe0);color:var(--acc);cursor:pointer;width:100%;}
+#bfc-app .thickwrap select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+#bfc-app .lenpair{display:flex;gap:6px;}
+#bfc-app .lensub{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden;flex:1;min-width:0;}
+#bfc-app .lensub input{border:none !important;border-radius:0 !important;min-width:0;width:100%;padding-right:2px !important;text-align:right;}
+#bfc-app .lensub span{padding:0 8px 0 2px;color:var(--muted);font-weight:700;font-size:.8rem;}
+#bfc-app .lensub:focus-within{outline:2px solid var(--gold);}
+#bfc-app .pricewrap{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden;}
+#bfc-app .pricewrap span{padding:0 4px 0 9px;color:var(--muted);font-weight:700;}
+#bfc-app .pricewrap input{border:none !important;border-radius:0 !important;min-width:0;padding-left:2px !important;}
+#bfc-app .pricewrap:focus-within{outline:2px solid var(--gold);}
+#bfc-app .f label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;}
+#bfc-app .lenwrap{display:flex;}
+#bfc-app .lenwrap input{border-radius:8px 0 0 8px;border-right:none;}
+#bfc-app .unit{display:flex;flex:none;border:1px solid var(--line);border-radius:0 8px 8px 0;overflow:hidden;}
+#bfc-app .unit button{border:none;background:#fff;padding:0 8px;min-width:32px;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;}
+#bfc-app .unit button.on{background:var(--acc);color:#fff;}
+#bfc-app .qty{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+#bfc-app .qty button{border:none;background:linear-gradient(#f6efe0,#eadfc6);width:34px;font-size:1.1rem;font-weight:800;color:var(--acc);cursor:pointer;transition:background .12s;}
+#bfc-app .qty button:hover{background:#e2d3b2;}
+#bfc-app .qty button:active{background:#d8c69f;}
+#bfc-app .qty input{border:none !important;text-align:center;width:100%;min-width:36px;border-radius:0 !important;}
+#bfc-app .row-result{display:flex;justify-content:flex-end;gap:22px;align-items:baseline;background:#f5eedd;border:1px dashed var(--line);border-radius:9px;padding:8px 14px;height:100%;}
+#bfc-app .row-result .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;display:block;}
+#bfc-app .row-result .bf,#bfc-app .row-result .cost{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.15rem;color:var(--ink);}
+#bfc-app .row-result .cost{color:var(--acc);}
+#bfc-app .add{margin:14px 0 4px;width:100%;background:linear-gradient(#fffdf8,#f6efe0);border:2px dashed var(--gold);color:var(--acc);border-radius:10px;padding:13px;font-weight:800;font-size:1rem;cursor:pointer;transition:all .15s;}
+#bfc-app .add:hover{background:#f3ead3;border-style:solid;box-shadow:0 3px 10px rgba(201,150,46,.25);transform:translateY(-1px);}
+#bfc-app .add:active{transform:none;}
+#bfc-app .tool-foot{background:var(--dark);color:#f5edda;padding:16px 22px;display:flex;flex-wrap:wrap;gap:8px 30px;align-items:center;justify-content:space-between;}
+#bfc-app .totals{display:flex;gap:34px;}
+#bfc-app .totals .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:#c9b98d;display:block;}
+#bfc-app .totals .num{font-size:1.9rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold);line-height:1.15;}
+#bfc-app .totals .num small{font-size:.85rem;color:#d9c89a;font-weight:600;}
+#bfc-app .actions{display:flex;gap:9px;flex-wrap:wrap;}
+#bfc-app .btn{background:linear-gradient(135deg,#dcaa3e,#c9962e);color:#241d14;border:none;border-radius:9px;padding:11px 18px;font-weight:800;cursor:pointer;font-size:.9rem;box-shadow:0 2px 8px rgba(201,150,46,.4),inset 0 1px 0 rgba(255,255,255,.35);transition:all .15s;letter-spacing:.01em;}
+#bfc-app .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(201,150,46,.5),inset 0 1px 0 rgba(255,255,255,.35);}
+#bfc-app .btn:active{transform:translateY(0);box-shadow:inset 0 2px 4px rgba(0,0,0,.2);}
+#bfc-app .btn.ghost{background:transparent;color:#f5edda;border:1px solid rgba(245,237,218,.5);font-weight:600;box-shadow:none;}
+#bfc-app .btn.ghost:hover{background:rgba(245,237,218,.1);border-color:var(--gold);color:var(--gold);transform:none;box-shadow:none;}
+#bfc-app .copied{color:#8fd6a2;font-weight:700;font-size:.85rem;display:none;}
+#bfc-app .note{font-size:.85rem;color:var(--muted);margin:14px 4px;}
+#bfc-app h2{margin:1.7em 0 .5em;}
+#bfc-app textarea.embed{width:100%;height:96px;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--card);}
+#bfc-app details{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px;}
+#bfc-app details summary{font-weight:700;cursor:pointer;}
+@media (max-width:680px){
+ #bfc-app .row-grid{grid-template-columns:1fr 1fr;}
+ #bfc-app .row-result{justify-content:space-between;}
+ #bfc-app .totals{gap:22px;} #bfc-app .totals .num{font-size:1.5rem;}
+}
+</style>
+</head>
+<body>
+<div id="bfc-app">
+<div class="tool" id="bfcTool">
+  <div class="tool-head">
+    <div class="t">🪵 Board Foot <span>Calculator</span>
+</div>
+    <div class="head-totals">
+      <div>
+<span class="hlbl">Total bd ft</span><span class="hnum" id="bfcTotalTop">0.00</span>
+</div>
+      <div>
+<span class="hlbl">Total cost</span><span class="hnum" id="bfcCostTop">—</span>
+</div>
+    </div>
+  </div>
+  <div class="tool-body">
+    <div class="rows" id="bfcRows"></div>
+    <button class="add" id="bfcAdd" type="button">+ Add another board</button>
+    <p class="note">Board feet = thickness × width × length (all inches) ÷ 144. Thickness pills are lumber-yard quarters: 4/4 = 1", 5/4 = 1¼", 6/4 = 1½", 8/4 = 2". Rough lumber is charged at nominal thickness — pick the quarter you're buying, not the planed size.</p>
+  </div>
+  <div class="tool-foot">
+    <div class="totals">
+      <div>
+<span class="lbl">Total board feet</span><span class="num" id="bfcTotal">0.00</span>
+</div>
+      <div>
+<span class="lbl">Total cost</span><span class="num" id="bfcCost">—</span>
+</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="bfcCopy" type="button">Copy cutlist</button>
+      <button class="btn ghost" id="bfcPrint" type="button">Print</button>
+      <button class="btn ghost" id="bfcReset" type="button">Start over</button>
+      <span class="copied" id="bfcCopied">Copied ✓</span>
+    </div>
+  </div>
+</div>
+<p class="credit">Board Foot Calculator by <a href="https://bluegrassgifts.com/pages/board-foot-calculator" target="_blank" rel="noopener">Bluegrass Gifts</a></p>
+</div>
+<script>
+(function(){
+  var QUARTERS=[];
+  for(var qi=1;qi<=40;qi++){QUARTERS.push([qi+'/4', qi/4]);}
+  var rows=document.getElementById('bfcRows');
+  function money(n){return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+  function rowTemplate(idx){
+    var d=document.createElement('div');d.className='row';d.dataset.q="1";
+    var opts=QUARTERS.map(function(q){return '<option value="'+q[1]+'"'+(q[1]===1?' selected':'')+'>'+q[0]+' ('+q[1]+'\")</option>';}).join('');
+    d.innerHTML=
+    '<button type="button" class="x" title="Remove board">×</button>'+
+    '<div class="row-top"><div class="name"><label style="font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:block;margin-bottom:4px;font-weight:700;">Board</label><input type="text" class="r-name" placeholder="Species, part, or cut &mdash; e.g. Walnut mantel blank"></div></div>'+
+    '<div class="row-grid">'+
+    '<div class="f"><label>Thickness</label><div class="thickwrap"><select class="r-q">'+opts+'</select></div></div>'+
+    '<div class="f"><label>Width (in)</label><input type="number" class="r-w" min="0" step="0.125" placeholder="5.5" inputmode="decimal"></div>'+
+    '<div class="f"><label>Length</label><div class="lenpair"><div class="lensub"><input type="number" class="r-lf" min="0" step="1" placeholder="8" inputmode="decimal"><span>ft</span></div><div class="lensub"><input type="number" class="r-li" min="0" step="0.25" placeholder="0" inputmode="decimal"><span>in</span></div></div></div>'+
+    '<div class="f"><label>Quantity</label><div class="qty"><button type="button" class="minus">−</button><input type="number" class="r-n" min="1" step="1" value="1" inputmode="numeric"><button type="button" class="plus">+</button></div></div>'+
+    '<div class="f"><label>Price / bd ft</label><div class="pricewrap"><span>$</span><input type="number" class="r-p" min="0" step="0.05" placeholder="0.00" inputmode="decimal"></div></div>'+
+    '<div class="row-result"><div><span class="lbl">Board feet</span><span class="bf">0.00</span></div><div><span class="lbl">Cost</span><span class="cost">—</span></div></div>'+
+    '</div>';
+    d.querySelector('.x').addEventListener('click',function(){d.remove();calc();});
+    d.querySelector('.r-q').addEventListener('change',function(){
+      d.dataset.q=this.value;
+      calc();
+    });
+    d.querySelector('.minus').addEventListener('click',function(){var n=d.querySelector('.r-n');n.value=Math.max(1,(parseInt(n.value)||1)-1);calc();});
+    d.querySelector('.plus').addEventListener('click',function(){var n=d.querySelector('.r-n');n.value=(parseInt(n.value)||1)+1;calc();});
+    d.querySelectorAll('input').forEach(function(el){el.addEventListener('input',calc);});
+    return d;
+  }
+  function addRow(){rows.appendChild(rowTemplate());calc();}
+  function rowPrice(d){return parseFloat(d.querySelector('.r-p').value)||0;}
+  function rowBF(d){
+    var t=parseFloat(d.dataset.q)||0;
+    var wEl=d.querySelector('.r-w');
+    var w=parseFloat(wEl.value)||0;
+    var l=(parseFloat(d.querySelector('.r-lf').value)||0)*12+(parseFloat(d.querySelector('.r-li').value)||0);
+    var n=parseInt(d.querySelector('.r-n').value)||1;
+    return t*w*l/144*n;
+  }
+  function calc(){
+    var total=0,cost=0,anyPrice=false;
+    rows.querySelectorAll('.row').forEach(function(d){
+      var bf=rowBF(d),p=rowPrice(d);total+=bf;
+      d.querySelector('.bf').textContent=bf.toFixed(2);
+      if(p>0&&bf>0){var c=bf*p;cost+=c;anyPrice=true;d.querySelector('.cost').textContent=money(c);}
+      else d.querySelector('.cost').textContent='—';
+    });
+    document.getElementById('bfcTotal').textContent=total.toFixed(2);
+    document.getElementById('bfcCost').textContent=anyPrice?money(cost):'—';
+    document.getElementById('bfcTotalTop').textContent=total.toFixed(2);
+    document.getElementById('bfcCostTop').textContent=anyPrice?money(cost):'—';
+  }
+  document.getElementById('bfcAdd').addEventListener('click',addRow);
+  document.getElementById('bfcReset').addEventListener('click',function(){rows.innerHTML='';addRow();calc();});
+  document.getElementById('bfcPrint').addEventListener('click',function(){window.print();});
+  document.getElementById('bfcCopy').addEventListener('click',function(){
+    var lines=['Cutlist — board feet (bluegrassgifts.com/pages/board-foot-calculator)'];
+    rows.querySelectorAll('.row').forEach(function(d,i){
+      var name=d.querySelector('.r-name').value||('Board '+(i+1));
+      var q=parseFloat(d.dataset.q);var qq=QUARTERS.find(function(x){return x[1]===q;});var t=qq?qq[0]:q+'"';
+      var bf=rowBF(d),p=rowPrice(d);
+      var lf=d.querySelector('.r-lf').value||0, li=d.querySelector('.r-li').value||0;
+      var lenStr=(lf>0?lf+'ft':'')+(li>0?(lf>0?' ':'')+li+'in':(lf>0?'':'0'));
+      var line=name+': '+t+' × '+(d.querySelector('.r-w').value||0)+'" × '+lenStr+' ×'+(d.querySelector('.r-n').value||1)+' = '+bf.toFixed(2)+' bd ft';
+      if(p>0)line+=' @ $'+p.toFixed(2)+'/bf = '+money(bf*p);
+      lines.push(line);
+    });
+    var tc=document.getElementById('bfcCost').textContent;
+    lines.push('TOTAL: '+document.getElementById('bfcTotal').textContent+' bd ft'+(tc!=='—'?' — '+tc:''));
+    var ta=document.createElement('textarea');ta.value=lines.join('\n');document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);
+    var ok=document.getElementById('bfcCopied');ok.style.display='inline';setTimeout(function(){ok.style.display='none';},1600);
+  });
+  addRow();addRow();
+})();
+</script>
+</body>
+</html>
